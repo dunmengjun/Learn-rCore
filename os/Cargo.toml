@@ -1,0 +1,37 @@
+[package]
+name = "os"
+version = "0.1.0"
+authors = ["Yifan Wu <shinbokuow@163.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+riscv = { git = "https://github.com/rcore-os/riscv", features = ["inline-asm"] }
+lazy_static = { version = "1.4.0", features = ["spin_no_std"] }
+buddy_system_allocator = "0.8.0"
+spin = "0.9.2"
+bitflags = "1.2.1"
+xmas-elf = "0.8.0"
+virtio-drivers = { git = "https://github.com/rcore-os/virtio-drivers" }
+easy-fs = { path = "../easy-fs" }
+
+[package.metadata.scripts]
+dev = """cd ../user && cargo exec img-build-dev && cd ../os \\
+&& cargo build \\
+&& rust-objcopy --binary-architecture=riscv64 target/riscv64gc-unknown-none-elf/debug/os --strip-all -O binary target/riscv64gc-unknown-none-elf/debug/os.bin \\
+&& qemu-system-riscv64 -machine virt -nographic -bios ../bootloader/rustsbi-qemu.bin \\
+-device loader,file=target/riscv64gc-unknown-none-elf/debug/os.bin,addr=0x80200000 \\
+-drive file=../user/target/riscv64gc-unknown-none-elf/debug/fs.img,if=none,format=raw,id=x0 \\
+-device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0"""
+
+release = """cd ../user && cargo exec img-build-release && cd ../os \\
+&& cargo build --release \\
+&& rust-objcopy --binary-architecture=riscv64 target/riscv64gc-unknown-none-elf/release/os --strip-all -O binary target/riscv64gc-unknown-none-elf/release/os.bin \\
+&& qemu-system-riscv64 -machine virt -nographic -bios ../bootloader/rustsbi-qemu.bin \\
+-device loader,file=target/riscv64gc-unknown-none-elf/release/os.bin,addr=0x80200000 \\
+-drive file=../user/target/riscv64gc-unknown-none-elf/release/fs.img,if=none,format=raw,id=x0 \\
+-device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0"""
+
+dev-build = """cd ../user && cargo exec img-build-dev && cd ../os && cargo build \\
+&& rust-objcopy --binary-architecture=riscv64 target/riscv64gc-unknown-none-elf/debug/os -O binary target/riscv64gc-unknown-none-elf/debug/os.bin"""
