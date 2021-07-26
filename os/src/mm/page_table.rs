@@ -1,5 +1,5 @@
 use super::{
-    frame_alloc,
+    frame_alloc_unwrap,
     PhysPageNumber,
     FrameTracker,
     VirtPageNumber,
@@ -70,7 +70,7 @@ pub struct PageTable {
 /// Assume that it won't oom when creating/mapping.
 impl PageTable {
     pub fn new() -> Self {
-        let frame = frame_alloc().unwrap();
+        let frame = frame_alloc_unwrap();
         PageTable {
             root_ppn: frame.ppn,
             frames: vec![frame],
@@ -94,7 +94,7 @@ impl PageTable {
                 break;
             }
             if !pte.is_valid() {
-                let frame = frame_alloc().unwrap();
+                let frame = frame_alloc_unwrap();
                 *pte = PageTableEntry::new(frame.ppn, PTEFlags::V);
                 self.frames.push(frame);
             }

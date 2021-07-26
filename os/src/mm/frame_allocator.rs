@@ -51,6 +51,7 @@ impl StackFrameAllocator {
         println!("last {} Physical Frames.", self.end - self.current);
     }
 }
+
 impl FrameAllocator for StackFrameAllocator {
     fn new() -> Self {
         Self {
@@ -76,7 +77,7 @@ impl FrameAllocator for StackFrameAllocator {
         // validity check
         if ppn >= self.current || self.recycled
             .iter()
-            .find(|&v| {*v == ppn})
+            .find(|&v| { *v == ppn })
             .is_some() {
             panic!("Frame ppn={:#x} has not been allocated!", ppn);
         }
@@ -108,6 +109,10 @@ pub fn frame_alloc() -> Option<FrameTracker> {
         .map(|ppn| FrameTracker::new(ppn))
 }
 
+pub fn frame_alloc_unwrap() -> FrameTracker {
+    frame_alloc().expect("No enough physical memory")
+}
+
 pub fn frame_dealloc(ppn: PhysPageNumber) {
     FRAME_ALLOCATOR
         .lock()
@@ -118,13 +123,13 @@ pub fn frame_dealloc(ppn: PhysPageNumber) {
 pub fn frame_allocator_test() {
     let mut v: Vec<FrameTracker> = Vec::new();
     for i in 0..5 {
-        let frame = frame_alloc().unwrap();
+        let frame = frame_alloc_unwrap();
         println!("{:?}", frame);
         v.push(frame);
     }
     v.clear();
     for i in 0..5 {
-        let frame = frame_alloc().unwrap();
+        let frame = frame_alloc_unwrap();
         println!("{:?}", frame);
         v.push(frame);
     }

@@ -1,6 +1,6 @@
 use super::{PageTable, PageTableEntry, PTEFlags};
 use super::{VirtPageNumber, VirtAddress, PhysPageNumber, PhysAddress};
-use super::{FrameTracker, frame_alloc};
+use super::{FrameTracker, frame_alloc_unwrap};
 use super::{VPNRange, StepByOne};
 use alloc::collections::BTreeMap;
 use alloc::vec::Vec;
@@ -270,7 +270,7 @@ impl MapArea {
                 ppn = PhysPageNumber(vpn.0);
             }
             MapType::Framed => {
-                let frame = frame_alloc().unwrap();
+                let frame = frame_alloc_unwrap();
                 ppn = frame.ppn;
                 self.data_frames.insert(vpn, frame);
             }

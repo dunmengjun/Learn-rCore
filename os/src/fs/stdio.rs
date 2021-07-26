@@ -1,6 +1,6 @@
 use super::File;
 use crate::mm::{UserBuffer};
-use crate::sbi::console_getchar;
+use crate::sbi::console_get_char;
 use crate::task::suspend_current_and_run_next;
 
 pub struct Stdin;
@@ -15,7 +15,7 @@ impl File for Stdin {
         // busy loop
         let mut c: usize;
         loop {
-            c = console_getchar();
+            c = console_get_char();
             if c == 0 {
                 suspend_current_and_run_next();
                 continue;

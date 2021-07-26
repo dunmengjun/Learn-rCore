@@ -3,7 +3,7 @@ use virtio_drivers::{VirtIOBlk, VirtIOHeader};
 use crate::mm::{
     PhysAddress,
     VirtAddress,
-    frame_alloc,
+    frame_alloc_unwrap,
     frame_dealloc,
     PhysPageNumber,
     FrameTracker,
@@ -47,7 +47,7 @@ impl VirtIOBlock {
 pub extern "C" fn virtio_dma_alloc(pages: usize) -> PhysAddress {
     let mut ppn_base = PhysPageNumber(0);
     for i in 0..pages {
-        let frame = frame_alloc().unwrap();
+        let frame = frame_alloc_unwrap();
         if i == 0 { ppn_base = frame.ppn; }
         assert_eq!(frame.ppn.0, ppn_base.0 + i);
         QUEUE_FRAMES.lock().push(frame);
