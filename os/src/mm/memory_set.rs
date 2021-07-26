@@ -174,7 +174,7 @@ impl MemorySet {
                 max_end_vpn = map_area.vpn_range.get_end();
                 memory_set.push(
                     map_area,
-                    Some(&elf.input[ph.offset() as usize..(ph.offset() + ph.file_size()) as usize])
+                    Some(&elf.input[ph.offset() as usize..(ph.offset() + ph.file_size()) as usize]),
                 );
             }
         }
@@ -220,7 +220,7 @@ impl MemorySet {
         let satp = self.page_table.token();
         unsafe {
             satp::write(satp);
-            llvm_asm!("sfence.vma" :::: "volatile");
+            asm!("sfence.vma", options(nostack));
         }
     }
     pub fn translate(&self, vpn: VirtPageNumber) -> Option<PageTableEntry> {
@@ -244,7 +244,7 @@ impl MapArea {
         start_va: VirtAddress,
         end_va: VirtAddress,
         map_type: MapType,
-        map_perm: MapPermission
+        map_perm: MapPermission,
     ) -> Self {
         let start_vpn: VirtPageNumber = start_va.floor();
         let end_vpn: VirtPageNumber = end_va.ceil();
