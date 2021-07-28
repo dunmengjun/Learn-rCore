@@ -1,5 +1,6 @@
 
 # Learn-rCore
+稍微对rCore的源码做了一些简化，去掉了makefile, 不用make而是使用cargo exec去组合一些命令，这样更rust原生，然后还加上了单元测试环境，以及cargo runner配置，这样就可以用cargo命令直接运行了，像是普通的rust项目一样。
 
 ### 必须的依赖
 1. qemu-system-risvc64 5.0.0以上
