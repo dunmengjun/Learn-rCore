@@ -7,7 +7,7 @@ mod memory_set;
 use page_table::PTEFlags;
 use address::VPNRange;
 pub use address::{PhysAddress, VirtAddress, PhysPageNumber, VirtPageNumber, StepByOne};
-pub use frame_allocator::{FrameTracker, frame_alloc_unwrap, frame_dealloc,};
+pub use frame_allocator::{FrameTracker, frame_alloc_unwrap, frame_dealloc};
 pub use page_table::{
     PageTable,
     PageTableEntry,
@@ -19,7 +19,6 @@ pub use page_table::{
     UserBufferIterator,
 };
 pub use memory_set::{MemorySet, KERNEL_SPACE, MapPermission, kernel_token};
-pub use memory_set::remap_test;
 
 pub fn init() {
     heap_allocator::init_heap();

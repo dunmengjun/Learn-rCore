@@ -15,6 +15,7 @@ bitflags = "1.2.1"
 xmas-elf = "0.8.0"
 virtio-drivers = { git = "https://github.com/rcore-os/virtio-drivers" }
 easy-fs = { path = "../easy-fs" }
+cargo-script-runner = { path = "../script-runner" }
 
 [package.metadata.scripts]
 #qemu-system-riscv64 -M 默认提供的是128M的内存
@@ -36,3 +37,9 @@ release = """cd ../user && cargo exec img-build-release && cd ../os \\
 
 dev-build = """cd ../user && cargo exec img-build-dev && cd ../os && cargo build \\
 && rust-objcopy --binary-architecture=riscv64 target/riscv64gc-unknown-none-elf/debug/os -O binary target/riscv64gc-unknown-none-elf/debug/os.bin"""
+
+dev-run = """rust-objcopy --binary-architecture=riscv64 {0} -O binary {0}.bin \\
+&& qemu-system-riscv64 -M virt -nographic -bios ../bootloader/rustsbi-qemu.bin \\
+-device loader,file={0}.bin,addr=0x80200000 \\
+-drive file=../user/target/riscv64gc-unknown-none-elf/debug/fs.img,if=none,format=raw,id=x0 \\
+-device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0"""

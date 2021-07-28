@@ -113,13 +113,8 @@ pub fn frame_alloc_unwrap() -> FrameTracker {
     frame_alloc().expect("No enough physical memory")
 }
 
-pub fn frame_dealloc(ppn: PhysPageNumber) {
-    FRAME_ALLOCATOR
-        .lock()
-        .dealloc(ppn);
-}
-
-#[allow(unused)]
+#[cfg(test)]
+#[test_case]
 pub fn frame_allocator_test() {
     let mut v: Vec<FrameTracker> = Vec::new();
     for i in 0..5 {
@@ -135,4 +130,10 @@ pub fn frame_allocator_test() {
     }
     drop(v);
     println!("frame_allocator_test passed!");
+}
+
+pub fn frame_dealloc(ppn: PhysPageNumber) {
+    FRAME_ALLOCATOR
+        .lock()
+        .dealloc(ppn);
 }

@@ -44,7 +44,7 @@ fn easy_fs_pack() -> std::io::Result<()> {
             .short("t")
             .long("target")
             .takes_value(true)
-            .help("Executable target dir(with backslash)")    
+            .help("Executable target dir(with backslash)")
         )
         .get_matches();
     let src_path = matches.value_of("source").unwrap();

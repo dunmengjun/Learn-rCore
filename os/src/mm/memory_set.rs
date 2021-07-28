@@ -336,7 +336,8 @@ bitflags! {
     }
 }
 
-#[allow(unused)]
+#[cfg(test)]
+#[test_case]
 pub fn remap_test() {
     let mut kernel_space = KERNEL_SPACE.lock();
     let mid_text: VirtAddress = ((stext as usize + etext as usize) / 2).into();

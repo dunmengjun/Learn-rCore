@@ -10,4 +10,7 @@ easy-fs/Cargo.lock
 easy-fs/target/*
 easy-fs-fuse/Cargo.lock
 easy-fs-fuse/target/*
+script-runner/target/*
+script-runner/.idea/*
+script-runner/Cargo.lock
 tools/

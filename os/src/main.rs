@@ -2,14 +2,18 @@
 #![no_main]
 #![feature(global_asm)]
 #![feature(panic_info_message)]
-// #![feature(const_in_array_repeat_expressions)]
 #![feature(alloc_error_handler)]
 #![feature(asm)]
+#![feature(custom_test_frameworks)]
+#![test_runner(test_runner)]
+#![reexport_test_harness_main = "test_main"]
 
 extern crate alloc;
 
 #[macro_use]
 extern crate bitflags;
+
+use crate::sbi::shutdown;
 
 #[macro_use]
 mod console;
@@ -36,12 +40,13 @@ fn clear_bss() {
     });
 }
 
+#[cfg(not(test))]
 #[no_mangle]
 pub fn rust_main() -> ! {
     clear_bss();
     println!("[kernel] Hello, world!");
     mm::init();
-    mm::remap_test();
+    // mm::remap_test();
     trap::init();
     trap::enable_timer_interrupt();
     timer::set_next_trigger();
@@ -50,3 +55,30 @@ pub fn rust_main() -> ! {
     task::run_tasks();
     panic!("Unreachable in rust_main!");
 }
+
+#[cfg(test)]
+#[no_mangle]
+pub fn rust_main() -> ! {
+    clear_bss();
+    println!("[kernel] Hello, world!");
+    mm::init();
+    test_main();
+    shutdown();
+}
+
+#[cfg(test)]
+fn test_runner(tests: &[&dyn Fn()]) {
+    println!("Running {} tests", tests.len());
+    for test in tests {
+        test();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test_case]
+    fn test_add() {
+        assert_eq!(1 + 2, 3);
+    }
+}
+

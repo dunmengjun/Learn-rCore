@@ -19,7 +19,8 @@ pub fn init_heap() {
     }
 }
 
-#[allow(unused)]
+#[cfg(test)]
+#[test_case]
 pub fn heap_test() {
     use alloc::boxed::Box;
     use alloc::vec::Vec;

@@ -88,7 +88,6 @@ pub fn trap_handler() -> ! {
             panic!("Unsupported trap {:?}, stval = {:#x}!", scause.cause(), stval);
         }
     }
-    //println!("before trap_return");
     trap_return();
 }
 
