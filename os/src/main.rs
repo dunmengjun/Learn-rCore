@@ -50,7 +50,6 @@ pub fn rust_main() -> ! {
     init_log_level(Level::Trace);
     info!("[kernel] Hello, world!");
     mm::init();
-    // mm::remap_test();
     trap::init();
     trap::enable_timer_interrupt();
     timer::set_next_trigger();

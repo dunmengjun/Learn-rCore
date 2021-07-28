@@ -1,5 +1,0 @@
-[toolchain]
-channel = "nightly-2021-01-30" # change to nightly-2021-01-30, the 02power is work
-components = [ "llvm-tools-preview", "rust-src" ]
-targets = [ "riscv64gc-unknown-none-elf"]
-profile = "default"
