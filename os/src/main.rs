@@ -7,6 +7,7 @@
 #![feature(custom_test_frameworks)]
 #![test_runner(test_runner)]
 #![reexport_test_harness_main = "test_main"]
+#![feature(allow_internal_unstable)]
 
 extern crate alloc;
 
@@ -14,6 +15,7 @@ extern crate alloc;
 extern crate bitflags;
 
 use crate::sbi::shutdown;
+use crate::log::{init_log_level, Level};
 
 #[macro_use]
 mod console;
@@ -27,6 +29,7 @@ mod timer;
 mod mm;
 mod fs;
 mod drivers;
+mod log;
 
 global_asm!(include_str!("entry.asm"));
 
@@ -44,7 +47,8 @@ fn clear_bss() {
 #[no_mangle]
 pub fn rust_main() -> ! {
     clear_bss();
-    println!("[kernel] Hello, world!");
+    init_log_level(Level::Trace);
+    info!("[kernel] Hello, world!");
     mm::init();
     // mm::remap_test();
     trap::init();
@@ -60,7 +64,8 @@ pub fn rust_main() -> ! {
 #[no_mangle]
 pub fn rust_main() -> ! {
     clear_bss();
-    println!("[kernel] Hello, world!");
+    init_log_level(Level::Trace);
+    info!("[kernel] Hello, world!");
     mm::init();
     test_main();
     shutdown();
@@ -68,7 +73,7 @@ pub fn rust_main() -> ! {
 
 #[cfg(test)]
 fn test_runner(tests: &[&dyn Fn()]) {
-    println!("Running {} tests", tests.len());
+    info!("Running {} tests", tests.len());
     for test in tests {
         test();
     }
